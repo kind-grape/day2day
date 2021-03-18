@@ -7,7 +7,7 @@
 5. install hvac
     pip install hvac
 6. interact with vault in python env
-python
+$ python
 >>> import hvac
 >>> import os
 >>> 
@@ -76,3 +76,16 @@ list_response = client.secrets.kv.v2.list_secrets(
 print('The following paths are available under "pcf-test-kv" prefix: {keys}'.format(
     keys=','.join(list_response['data']['keys']),
 ))
+
+
+## Running recursive look up for all secrets under a mount and path
+use the `hvac_list_kv.py` to generate a print out of all the secret path under a particular mount/path.
+
+To run the script, make sure to set up the vault token as env variable of the shell, and set the target vault address/namespace properly in the hvac client connection block.
+
+`recursive_lookup` function takes `mount` and `path` input as optional. Mount would be specified to `secret/` if left blank as empty string and path would be set as the top level if left black as empty string
+
+Run the following command to loop and print out all the secret path 
+```
+python hvac_list_kv.py
+```
