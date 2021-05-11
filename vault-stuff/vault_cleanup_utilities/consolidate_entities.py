@@ -7,7 +7,8 @@ import json
 # entity_abb56xh types random entity names that are created by vault with some legit entity alias from a mount
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 client = hvac.Client(
-    url='https://vault-tst.npe-services.t-mobile.com/',
+    #url='https://vault-tst.npe-services.t-mobile.com/',
+    url='https://vault-dev.npe-services.t-mobile.com/',
     token=os.environ.get('VAULT_TOKEN'),
     #namespace='pcf',
     verify=False, # In case you want to run without validating certs 
@@ -120,6 +121,25 @@ def GetEntitiesWithAAD (entityNameArr):
     print ('following entities have AAD(oidc) auth method alias ' + str(entities))
     return entities
 
+
+
+# this is to get the list of entities with aliases that are from okt(oidc) auth method
+def GetEntitiesWithOkt (entityNameArr):
+    entities = []
+    for i in entityNameArr:
+        # now read the aliasses list for each entities
+        auth_count = 0
+        for r in ReadEntityAliases(i):
+            if r['mount_accessor'] == GetAuthAccessor('okt'):
+                # if there was a matching auth accessor this count should increase
+                auth_count += 1
+        if auth_count is 1:
+            entities.append(i)
+    print ('following entities have okt(oidc) auth method alias ' + str(entities))
+    return entities
+
+
+
 # this is to update the entity naming convention and consolidate entity aliasses
 def ConsolidateOIDCEnt (entityNameArr):
     # update the entities for each of the entity name list 
@@ -156,11 +176,11 @@ def ConsolidateOIDCEnt (entityNameArr):
 
 
 
-nonStandarEnt = FilterNonStandardEntityNames(GetAllEntityNames())
-print (nonStandarEnt)
+#nonStandarEnt = FilterNonStandardEntityNames(GetAllEntityNames())
+#print (nonStandarEnt)
 #GetEntitiesWithLDAP(nonStandarEnt)
 #GetEntitiesWithAAD(nonStandarEnt)
-ConsolidateOIDCEnt(['entity_1'])
+#ConsolidateOIDCEnt(['entity_1'])
 
 #aliasArr = (ReadEntityAliases('entity_OBarron1'))
 
