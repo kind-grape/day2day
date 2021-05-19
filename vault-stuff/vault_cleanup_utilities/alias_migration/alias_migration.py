@@ -45,32 +45,42 @@ allAlias = get_alias_list()
 
 
 oktAliasFile = open("oktAliasID.log", "w")
+oktAliasNameFile = open("oktAliasName.log", "w")
 oktEntFile = open("oktEntID.log", "w")
 
 oidcAliasFile = open("oidcAliasID.log", "w")
+oidcAliasNameFile = open("oidcAliasName.log", "w")
 oidcEntFile = open("oidcEntID.log", "w")
 
 def get_okt_alias (aliasArr):
     okt_accessor = GetAuthAccessor('okt')
     oktAliasID = []
     oktEntID = []
+    oktAliasName = []
 
     aad_accessor = GetAuthAccessor('oidc')
     oidcAliasID = []
     oidcEntID = []
+    oidcAliasName = []
 
     for aliasID in aliasArr:
         readAliasID  = client.secrets.identity.read_entity_alias(alias_id=aliasID,)
         if readAliasID['data']['mount_accessor'] == okt_accessor:
             oktAliasID.append(aliasID)
             oktEntID.append(readAliasID['data']['canonical_id'])
+            oktAliasName.append(readAliasID['data']['name'])
         elif readAliasID['data']['mount_accessor'] == aad_accessor:
             oidcAliasID.append(aliasID)
             oidcEntID.append(readAliasID['data']['canonical_id'])
+            oidcAliasName.append(readAliasID['data']['name'])
     
     print (len(oktAliasID))
     oktAliasFile.write(str(oktAliasID))
     oktAliasFile.close()
+
+    print (len(oktAliasName))
+    oktAliasNameFile.write(str(oktAliasName))
+    oktAliasNameFile.close()
 
     print (len(oktEntID))
     oktEntFile.write(str(oktEntID))
@@ -79,6 +89,10 @@ def get_okt_alias (aliasArr):
     print (len(oidcAliasID))
     oidcAliasFile.write(str(oidcAliasID))
     oidcAliasFile.close()
+
+    print (len(oidcAliasName))
+    oidcAliasNameFile.write(str(oktAliasName))
+    oidcAliasNameFile.close()
 
     print (len(oidcEntID))
     oidcEntFile.write(str(oidcEntID))
