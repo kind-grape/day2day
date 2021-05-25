@@ -13,7 +13,7 @@ client = hvac.Client(
 )
 
 def GetAuthAccessor (authMethod):
-  # returned response is a dict object
+    # returned response is a dict object
     if '/' not in authMethod:
         authMethod += '/'
     auth_methods = client.sys.list_auth_methods()
@@ -21,11 +21,19 @@ def GetAuthAccessor (authMethod):
     #print(json.dumps(auth_methods, indent=1))
     authAccessor = auth_methods[authMethod]['accessor']
     return authAccessor
-
+    
 def updateAlias (aliasID, entID, name, mountAccessor):
+    client.secrets.identity.update_entity_alias(
+        alias_id=aliasID,
+        name=name,
+        canonical_id=entID,
+        mount_accessor=mountAccessor,
+    )
+    print ('Alias '+ aliasID + ' has been updated')
+
     
 
-newAuth = "aad"
+newAuth = "okt"
 newAuthAcs = GetAuthAccessor (newAuth)
 
 with open('oidcAliasID.log', 'r') as f:
@@ -34,12 +42,28 @@ with open('oidcAliasID.log', 'r') as f:
 with open('oidcEntID.log', 'r') as f:
     oidcEntID = ast.literal_eval(f.read())
 
+with open('oidcAliasName.log', 'r') as f:
+    oidcAliasName = ast.literal_eval(f.read())
+
 with open('oktAliasID.log', 'r') as f:
     oktAliasID = ast.literal_eval(f.read())
 
 with open('oktEntID.log', 'r') as f:
-    oktAEntID = ast.literal_eval(f.read())
+    oktEntID = ast.literal_eval(f.read())
+
+with open('oidcAliasName.log', 'r') as f:
+    oktAliasName = ast.literal_eval(f.read())
 
 print("now we have the list of IDs as python var")
 
 print("now update the list okt alias IDs")
+
+def updateAllOktAlias ():
+    pos = 0
+    for i in oktAliasID:
+      updateAlias(i, oktEntID[pos],oktAliasName[pos],newAuthAcs)
+      pos += 1
+
+updateAllOktAlias()
+
+
