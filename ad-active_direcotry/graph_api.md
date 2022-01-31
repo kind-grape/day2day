@@ -31,6 +31,10 @@ Search a particular group with all the attributes by providing the 'displayName'
 GET https://graph.microsoft.com/v1.0/groups?$filter=startswith(displayName, '<group name>')&$count=true
 ```
 
+Get Members of a group 
+```
+GET https://graph.microsoft.com/v1.0/groups/{id}/members
+```
 
 
 
