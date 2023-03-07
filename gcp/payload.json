@@ -1,0 +1,8 @@
+{
+  "audience": "//iam.googleapis.com/projects/203964333557/locations/global/workloadIdentityPools/pd120-hhzps/providers/pd120-hhzps",
+  "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+  "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
+  "scope": "https://www.googleapis.com/auth/cloud-platform",
+  "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
+  "subject_token": "eyasdasdasaaacadauiusduiashdiajnuidhfuahsdiasdahsdhuashduashdui"
+}
