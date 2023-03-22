@@ -21,8 +21,12 @@ jq -M ". + {audience:\"$audience\", subject_token:\"$token\"}" $payload_location
 cat $payload_location
 
 echo "POST to google STS endpoint to get OAuth Token"
-oauth_token=$(curl --request POST -H "Content-Type: application/json" -d @$payload_location https://sts.googleapis.com/v1/token | jq -r .access_token)
+temp_oauth_token=$(curl --request POST -H "Content-Type: application/json" -d @$payload_location https://sts.googleapis.com/v1/token | jq -r .access_token)
 cat oauth_token
+
+URL="$(cat $credential_location  | jq -r .service_account_impersonation_url)"
+echo $audience
+OAUTH_TOKEN="$(curl -X POST -H 'Content-Type: application/json' -H "Authorization: Bearer ${temp_oauth_token}" --data '{"delegates": null, "scope": ["openid", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/appengine.admin", "https://www.googleapis.com/auth/sqlservice.login", "https://www.googleapis.com/auth/compute"], "lifetime": "3600s"}' $URL | jq -r .accessToken)"
 
 echo "Running GCS API to upload snapshot to bucket"
 # the following ENV VAR should exist
